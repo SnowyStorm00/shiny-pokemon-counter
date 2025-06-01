@@ -1,0 +1,37 @@
+{
+  "name": "shiny-counter",
+  "version": "1.0.0",
+  "description": "Simple shiny Pokemon odds calculator",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build --win",
+    "build-mac": "electron-builder build --mac",
+    "build-linux": "electron-builder build --linux"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.6.3"
+  },
+  "build": {
+    "appId": "com.yourusername.shiny-counter",
+    "productName": "Shiny Pokemon Counter",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "build/icon.png"
+    }
+  }
+}
