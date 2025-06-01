@@ -35,6 +35,19 @@ Shiny Pokemon Counter is a dedicated application for tracking your shiny hunting
 - **Windows**: Windows 7 or later
 - **Disk Space**: Less than 100MB required
 
+## Installation
+
+### Windows
+1. Go to the [Releases](https://github.com/YOUR_USERNAME/shiny-pokemon-counter/releases) page
+2. Download the latest `.exe` installer or portable version
+3. Run the installer or portable executable
+
+### Building from Source
+1. Clone this repository
+2. Run `npm install` to install dependencies
+3. Run `npm start` to start the application
+4. Run `npm run build` to build the distributable
+
 ## Notes
 - This is the initial release of the Shiny Pokemon Counter
 - Future updates may include additional hunting methods and features
