@@ -1,4 +1,4 @@
-# Shiny Pokemon Counter v1.0.0 Release Notes
+# Shiny Pokemon Counter v1.1.0
 
 ## Overview
 Shiny Pokemon Counter is a dedicated application for tracking your shiny hunting progress across all Pokemon generations. This tool calculates real-time odds and helps you monitor your shiny hunting journey with accurate probability statistics.
@@ -14,7 +14,11 @@ Shiny Pokemon Counter is a dedicated application for tracking your shiny hunting
 - **Wild Encounters**: Traditional random encounter shiny hunting
 - **Masuda Method**: Breeding Pokemon from different language games
   - Available in Gen 4 and above with proper odds (5/8192 in Gen 4, etc.)
-  - Method selector dynamically shows only available methods for each generation
+- **Gen 2 Breeding System**: Complete implementation of Generation 2 breeding mechanics
+  - Select from all 251 Gen 1 & 2 Pokémon with accurate egg groups and gender ratios
+  - Special handling for genderless Pokémon and Ditto compatibility
+  - Proper implementation of Gen 2's unique parent-to-offspring shiny inheritance
+- **Method Selector**: Dynamically shows only available methods for each generation
 
 ### Shiny Charm Support
 - **Generation-Specific Effects**: Properly implements how the Shiny Charm works in each generation
@@ -30,6 +34,18 @@ Shiny Pokemon Counter is a dedicated application for tracking your shiny hunting
 - **Modern Design**: Clean, gradient-based interface
 - **Intuitive Controls**: Simple buttons for rolling and resetting
 - **Responsive Layout**: Properly sized for easy viewing
+- **Dynamic Breeding UI**: Interactive breeding compatibility checker for Gen 2
+
+## How to Use Gen 2 Breeding Feature
+
+1. Select **Generation 2** from the dropdown menu
+2. Choose **Breeding** as your hunting method
+3. The breeding controls panel will appear automatically
+4. Select your parent Pokémon (compatible egg groups will be shown)
+5. Mark if either parent is shiny (this affects odds in Gen 2)
+6. Compatibility will be checked automatically
+7. View your odds of hatching a shiny egg
+8. Use the counter buttons to track your hatching attempts
 
 ## System Requirements
 - **Windows**: Windows 7 or later
@@ -38,7 +54,7 @@ Shiny Pokemon Counter is a dedicated application for tracking your shiny hunting
 ## Installation
 
 ### Windows
-1. Go to the [Releases](https://github.com/YOUR_USERNAME/shiny-pokemon-counter/releases) page
+1. Go to the [Releases](https://github.com/SnowyStorm00/shiny-pokemon-counter/releases) page
 2. Download the latest `.exe` installer or portable version
 3. Run the installer or portable executable
 
@@ -47,10 +63,6 @@ Shiny Pokemon Counter is a dedicated application for tracking your shiny hunting
 2. Run `npm install` to install dependencies
 3. Run `npm start` to start the application
 4. Run `npm run build` to build the distributable
-
-## Notes
-- This is the initial release of the Shiny Pokemon Counter
-- Future updates may include additional hunting methods and features
 
 ## Known Issues
 - None at this time
