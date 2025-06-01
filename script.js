@@ -2,7 +2,7 @@ let rolls = 0;
 
 // Available methods per generation
 const availableMethods = {
-  2: ["encounters"],
+  2: ["encounters", "breeding"],
   3: ["encounters"],
   4: ["encounters", "masuda"],
   5: ["encounters", "masuda"],
@@ -15,7 +15,8 @@ const availableMethods = {
 // Method display names
 const methodNames = {
   "encounters": "Wild Encounters",
-  "masuda": "Masuda Method"
+  "masuda": "Masuda Method",
+  "breeding": "Shiny Breeding"
 };
 
 // Update available methods based on the selected generation
@@ -40,6 +41,9 @@ function updateAvailableMethods() {
   if (methods.includes(currentMethod)) {
     methodSelect.value = currentMethod;
   }
+  
+  // Handle method change to show/hide breeding controls
+  handleMethodChange();
 }
 
 // Get current shiny rate based on all factors
@@ -47,6 +51,12 @@ function getShinyRate() {
   const generation = parseInt(document.getElementById('generation').value);
   const hasShinyCharm = document.getElementById('shinyCharm').checked;
   const method = document.getElementById('method').value;
+  
+  // For Gen 2 breeding
+  if (method === "breeding" && generation === 2) {
+    // Use the Gen 2 breeding function from gen2breeding.js
+    return window.gen2breeding.getGen2BreedingRate();
+  }
   
   // For wild encounters
   if (method === "encounters") {
@@ -76,11 +86,18 @@ function getShinyRate() {
   }
 }
 
-// Update the display with the current odds text
+// Update the odds text display
 function updateOddsText() {
   const generation = parseInt(document.getElementById('generation').value);
   const hasShinyCharm = document.getElementById('shinyCharm').checked;
   const method = document.getElementById('method').value;
+  
+  // For Gen 2 breeding
+  if (method === "breeding" && generation === 2) {
+    // Use the Gen 2 breeding function from gen2breeding.js
+    window.gen2breeding.updateGen2BreedingOddsText();
+    return;
+  }
   
   // For wild encounters
   if (method === "encounters") {
@@ -176,8 +193,36 @@ function updateDisplay() {
     `Probability of finding shiny by now: ${displayProb}%`;
 }
 
-// Setup event listeners once the DOM is fully loaded
+// Function to handle method changes
+function handleMethodChange() {
+  const generation = parseInt(document.getElementById('generation').value);
+  const method = document.getElementById('method').value;
+  const breedingControls = document.getElementById('breedingControls');
+  
+  if (method === "breeding" && generation === 2) {
+    breedingControls.style.display = 'block';
+    // Populate breeding Pokémon
+    window.gen2breeding.populateBreedingPokemon();
+  } else {
+    breedingControls.style.display = 'none';
+  }
+  
+  updateShinyCharmAvailability();
+  updateOddsText();
+  updateDisplay();
+}
+
+// Initialize when the page loads
 document.addEventListener('DOMContentLoaded', function() {
+  // Add basic CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    .compatibility-success { color: #4CAF50; font-weight: bold; }
+    .compatibility-error { color: #f44336; font-weight: bold; }
+    .compatibility-warning { color: #FFC107; font-weight: bold; }
+  `;
+  document.head.appendChild(style);
+  
   // Roll button increases counter and calculates probability
   document.getElementById('rollBtn').addEventListener('click', function() {
     rolls++;
@@ -201,9 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Method selector changes odds
   document.getElementById('method').addEventListener('change', function() {
-    updateShinyCharmAvailability();
-    updateOddsText();
-    updateDisplay();
+    handleMethodChange();
   });
   
   // Shiny charm checkbox changes odds

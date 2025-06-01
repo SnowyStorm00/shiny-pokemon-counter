@@ -85,3 +85,44 @@ label {
   margin-right: 5px;
   transform: scale(1.2);
 }
+
+#breedingControls {
+  margin: 15px 0;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.breeding-parent {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.breeding-parent h4 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.compatibility-success {
+  color: #4CAF50;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.compatibility-error {
+  color: #f44336;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.compatibility-warning {
+  color: #FFC107;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.control-group {
+  margin: 10px 0;
+}

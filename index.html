@@ -37,6 +37,32 @@
       </label>
     </div>
     
+    <div id="breedingControls" style="display: none;">
+      <div class="control-group breeding-parent">
+        <h3>Parent 1</h3>
+        <select id="parent1" onchange="updateBreedingCompatibility()">
+          <option value="">Select Pokémon</option>
+        </select>
+        <label class="checkbox-label">
+          <input type="checkbox" id="parent1Shiny" onchange="updateOddsText()"> Shiny
+        </label>
+      </div>
+      
+      <div class="control-group breeding-parent">
+        <h3>Parent 2</h3>
+        <select id="parent2" onchange="updateBreedingCompatibility()">
+          <option value="">Select Pokémon</option>
+        </select>
+        <label class="checkbox-label">
+          <input type="checkbox" id="parent2Shiny" onchange="updateOddsText()"> Shiny
+        </label>
+      </div>
+      
+      <div id="compatibilityMessage" class="compatibility-warning">
+        Select both parents to check compatibility
+      </div>
+    </div>
+    
     <div id="counter">Rolls: 0</div>
     <div id="odds">Current Odds: 1/4096</div>
     <div id="probability">Probability of finding shiny by now: 0.00%</div>
@@ -47,6 +73,8 @@
     </div>
   </div>
 
+  <!-- Add this before your main script -->
+  <script src="gen2breeding.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
