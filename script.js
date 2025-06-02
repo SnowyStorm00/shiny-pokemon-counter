@@ -2,7 +2,7 @@ let rolls = 0;
 
 // Available methods per generation
 const availableMethods = {
-  2: ["encounters", "breeding"],
+  2: ["encounters", "breeding", "oddEgg"],
   3: ["encounters"],
   4: ["encounters", "masuda"],
   5: ["encounters", "masuda"],
@@ -16,7 +16,8 @@ const availableMethods = {
 const methodNames = {
   "encounters": "Wild Encounters",
   "masuda": "Masuda Method",
-  "breeding": "Shiny Breeding"
+  "breeding": "Shiny Breeding",
+  "oddEgg": "Odd Egg (Crystal)"
 };
 
 // Update available methods based on the selected generation
@@ -52,6 +53,11 @@ function getShinyRate() {
   const hasShinyCharm = document.getElementById('shinyCharm').checked;
   const method = document.getElementById('method').value;
   
+  // For Odd Egg (Crystal)
+  if (method === "oddEgg" && generation === 2) {
+    return window.oddEgg.getShinyProbability();
+  }
+  
   // For Gen 2 breeding
   if (method === "breeding" && generation === 2) {
     // Use the Gen 2 breeding function from gen2breeding.js
@@ -76,7 +82,10 @@ function getShinyRate() {
       // Gen 6+: With charm it's 3/4096
       return hasShinyCharm ? 3/4096 : 1/4096;
     }
-  } 
+  }
+  
+  // Default fallback
+  return 1/8192;
 }
 
 // Update the odds text display
@@ -84,6 +93,12 @@ function updateOddsText() {
   const generation = parseInt(document.getElementById('generation').value);
   const hasShinyCharm = document.getElementById('shinyCharm').checked;
   const method = document.getElementById('method').value;
+  
+  // For Odd Egg (Crystal)
+  if (method === "oddEgg" && generation === 2) {
+    window.oddEgg.updateOddEggOddsText();
+    return;
+  }
   
   // For Gen 2 breeding
   if (method === "breeding" && generation === 2) {
@@ -153,26 +168,36 @@ function updateTheme() {
   
   const theme = themes[generation];
   document.body.style.background = `linear-gradient(to bottom, ${theme.top}, ${theme.bottom})`;
-  document.getElementById('rollBtn').style.backgroundColor = theme.bottom;
+  
+  // Make sure rollBtn exists before trying to style it
+  const rollBtn = document.getElementById('rollBtn');
+  if (rollBtn) {
+    rollBtn.style.backgroundColor = theme.bottom;
+  }
 }
 
+// Function to update the display with current roll count and probability
 function updateDisplay() {
-  // Update counter
-  document.getElementById('counter').textContent = `Rolls: ${rolls}`;
-  
-  // Get current shiny rate
-  const shinyRate = getShinyRate();
+  // Update roll count - Fix: use the correct ID 'counter' instead of 'rolls'
+  const counterElement = document.getElementById('counter');
+  if (counterElement) {
+    counterElement.textContent = `Rolls: ${rolls}`;
+  }
   
   // Calculate probability of having found at least one shiny by now
-  // P = 1 - (1 - rate)^rolls
-  const notFoundProb = Math.pow(1 - shinyRate, rolls);
-  const foundProb = (1 - notFoundProb) * 100;
+  const shinyRate = getShinyRate();
+  const probability = 1 - Math.pow(1 - shinyRate, rolls);
+  const probabilityPercent = (probability * 100).toFixed(2);
   
-  // Cap at 99.99% since 100% is theoretically impossible
-  const displayProb = Math.min(foundProb, 99.99).toFixed(2);
+  // Update probability display
+  document.getElementById('probability').textContent = `${probabilityPercent}%`;
   
-  document.getElementById('probability').textContent = 
-    `Probability of finding shiny by now: ${displayProb}%`;
+  // Update Odd Egg table if that's the current method
+  const generation = parseInt(document.getElementById('generation').value);
+  const method = document.getElementById('method').value;
+  if (method === "oddEgg" && generation === 2 && window.oddEgg) {
+    window.oddEgg.updateOddEggTable();
+  }
 }
 
 // Function to handle method changes
@@ -181,12 +206,24 @@ function handleMethodChange() {
   const method = document.getElementById('method').value;
   const breedingControls = document.getElementById('breedingControls');
   
+  // Hide all method-specific UIs first
+  if (breedingControls) {
+    breedingControls.style.display = 'none';
+  }
+  
+  // Hide Odd Egg UI if it exists
+  if (window.oddEgg) {
+    window.oddEgg.hideOddEggUI();
+  }
+  
+  // Show appropriate UI based on method
   if (method === "breeding" && generation === 2) {
     breedingControls.style.display = 'block';
     // Populate breeding Pokémon
     window.gen2breeding.populateBreedingPokemon();
-  } else {
-    breedingControls.style.display = 'none';
+  } else if (method === "oddEgg" && generation === 2) {
+    // Show Odd Egg UI
+    window.oddEgg.showOddEggUI();
   }
   
   updateShinyCharmAvailability();
@@ -202,6 +239,52 @@ document.addEventListener('DOMContentLoaded', function() {
     .compatibility-success { color: #4CAF50; font-weight: bold; }
     .compatibility-error { color: #f44336; font-weight: bold; }
     .compatibility-warning { color: #FFC107; font-weight: bold; }
+    
+    .odd-egg-container {
+      margin: 15px 0;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    
+    .odd-egg-description {
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+    
+    .odd-egg-table h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    
+    .odd-egg-stats {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+    
+    .odd-egg-stats th, .odd-egg-stats td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .odd-egg-stats th {
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+    .odd-egg-stats tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .odd-egg-stats th:nth-child(2),
+    .odd-egg-stats td:nth-child(2),
+    .odd-egg-stats th:nth-child(3),
+    .odd-egg-stats td:nth-child(3) {
+      text-align: right;
+    }
   `;
   document.head.appendChild(style);
   
@@ -243,4 +326,10 @@ document.addEventListener('DOMContentLoaded', function() {
   updateOddsText();
   updateTheme();
   updateDisplay();
+  
+  // Log debug info but don't add duplicate event handlers
+  console.log("Script.js loaded");
+  console.log("oddEgg available:", typeof window.oddEgg !== 'undefined');
+  console.log("masudaMethod available:", typeof window.masudaMethod !== 'undefined');
+  console.log("gen2breeding available:", typeof window.gen2breeding !== 'undefined');
 });

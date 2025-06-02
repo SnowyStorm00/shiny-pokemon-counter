@@ -126,3 +126,50 @@ label {
 .control-group {
   margin: 10px 0;
 }
+
+/* Odd Egg styles */
+.odd-egg-container {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.odd-egg-description {
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.odd-egg-table h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.odd-egg-stats {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+.odd-egg-stats th, .odd-egg-stats td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.odd-egg-stats th {
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.odd-egg-stats tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.odd-egg-stats th:nth-child(2),
+.odd-egg-stats td:nth-child(2),
+.odd-egg-stats th:nth-child(3),
+.odd-egg-stats td:nth-child(3) {
+  text-align: right;
+}
