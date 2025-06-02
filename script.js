@@ -58,6 +58,12 @@ function getShinyRate() {
     return window.gen2breeding.getGen2BreedingRate();
   }
   
+  // For Masuda Method
+  if (method === "masuda") {
+    // Use the Masuda Method function from masudaMethod.js
+    return window.masudaMethod.getMasudaRate(generation, hasShinyCharm);
+  }
+  
   // For wild encounters
   if (method === "encounters") {
     if (generation >= 2 && generation <= 4) {
@@ -71,19 +77,6 @@ function getShinyRate() {
       return hasShinyCharm ? 3/4096 : 1/4096;
     }
   } 
-  // For Masuda Method
-  else if (method === "masuda") {
-    if (generation == 4) {
-      // Gen 4: Always 5/8192 (no shiny charm effect)
-      return 5/8192;
-    } else if (generation == 5) {
-      // Gen 5: 6/8192 or 8/8192 with charm
-      return hasShinyCharm ? 8/8192 : 6/8192;
-    } else {
-      // Gen 6+: 6/4096 or 8/4096 with charm
-      return hasShinyCharm ? 8/4096 : 6/4096;
-    }
-  }
 }
 
 // Update the odds text display
@@ -96,6 +89,13 @@ function updateOddsText() {
   if (method === "breeding" && generation === 2) {
     // Use the Gen 2 breeding function from gen2breeding.js
     window.gen2breeding.updateGen2BreedingOddsText();
+    return;
+  }
+  
+  // For Masuda Method
+  if (method === "masuda") {
+    // Use the Masuda Method function from masudaMethod.js
+    window.masudaMethod.updateMasudaOddsText(generation, hasShinyCharm);
     return;
   }
   
@@ -114,24 +114,6 @@ function updateOddsText() {
         document.getElementById('odds').textContent = "Current Odds: 3/4096 (≈1/1365)";
       } else {
         document.getElementById('odds').textContent = "Current Odds: 1/4096";
-      }
-    }
-  } 
-  // For Masuda Method
-  else if (method === "masuda") {
-    if (generation == 4) {
-      document.getElementById('odds').textContent = "Current Odds: 5/8192 (≈1/1638)";
-    } else if (generation == 5) {
-      if (hasShinyCharm) {
-        document.getElementById('odds').textContent = "Current Odds: 8/8192 (≈1/1024)";
-      } else {
-        document.getElementById('odds').textContent = "Current Odds: 6/8192 (≈1/1365)";
-      }
-    } else { // Gen 6-9
-      if (hasShinyCharm) {
-        document.getElementById('odds').textContent = "Current Odds: 8/4096 (≈1/512)";
-      } else {
-        document.getElementById('odds').textContent = "Current Odds: 6/4096 (≈1/683)";
       }
     }
   }
